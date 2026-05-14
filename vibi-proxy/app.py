@@ -31,15 +31,15 @@ def start():
     username = os.environ.get('KAGGLE_USERNAME', '')
     api_token = os.environ.get('KAGGLE_API_TOKEN', '')
     kernel_slug = os.environ.get('KAGGLE_KERNEL_SLUG', '')
-    
+
     if not all([username, api_token, kernel_slug]):
         return jsonify({'status': 'error', 'message': 'Kaggle credentials missing'}), 500
-    
+
     try:
         response = requests.post(
-            f'https://www.kaggle.com/api/v1/kernels/{username}/{kernel_slug}/run',
+            f'https://www.kaggle.com/api/v1/kernels/run',
             auth=(username, api_token),
-            json={}
+            json={"id": f"{username}/{kernel_slug}"}
         )
         if response.status_code in [200, 201]:
             return jsonify({'status': 'ok', 'message': 'Kaggle notebook starting!'})
